@@ -33,10 +33,10 @@ class UDPComm;
 #pragma pack(push, 1)
 struct SBData 
 {
-    float fl;
-    float fr;
-    float rl;
     float rr;
+    float rl;
+    float fr;
+    float fl;
     unsigned int button;
 };
 #pragma pack(pop)
@@ -53,7 +53,7 @@ struct SBCtrlData
 
 
 
-class PLUGINEXPORT Skateboard :  public opencover::coVRPlugin, public OpenThreads::Thread, public opencover::coVRNavigationProvider
+class PLUGINEXPORT Skateboard : public opencover::coVRPlugin, public OpenThreads::Thread, public opencover::coVRNavigationProvider
 {
 public:
     Skateboard();

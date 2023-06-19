@@ -250,13 +250,8 @@
    <!--Background r="1.0" g="1.0" b="1.0"/-->
    
                 <Freeze value="on" />
-            <Plugin>
-                <ARTrace value="off" />
-                <ARToolKit value="off" >
-                    <Capture value="ON" />
-                    <Stereo value="OFF" />
-                    <TrackViewpoint value="OFF" />
-                    <TrackObjects value="ON" />
+				
+                <MarkerTracking >
 		    <Marker name="Revit_43" >
                         <Pattern value="43" />
                         <Size value="327" />
@@ -284,14 +279,52 @@
                         <Offset x="137" y="-83" z="25" h="180" p="0" r="-90" />
                         <VrmlToPf value="FALSE"/>
                     </Marker>
+					<Marker name="ObjectMarker3" >
+                        <Pattern value="0" />
+                        <Size value="30" />
+                        <Offset x="137" y="-83" z="25" h="180" p="0" r="-90" />
+                        <VrmlToPf value="FALSE"/>
+                    </Marker>
+					<Marker name="ObjectMarker4" >
+                        <Pattern value="1" />
+                        <Size value="30" />
+                        <Offset x="137" y="-83" z="25" h="180" p="0" r="-90" />
+                        <VrmlToPf value="FALSE"/>
+                    </Marker>
+					<Marker name="ObjectMarker5" >
+                        <Pattern value="2" />
+                        <Size value="30" />
+                        <Offset x="137" y="-83" z="25" h="180" p="0" r="-90" />
+                        <VrmlToPf value="FALSE"/>
+                    </Marker>
+					<Marker name="ObjectMarker6" >
+                        <Pattern value="3" />
+                        <Size value="30" />
+                        <Offset x="137" y="-83" z="25" h="180" p="0" r="-90" />
+                        <VrmlToPf value="FALSE"/>
+                    </Marker>
 					<Marker name="Tracer12" >
                         <Pattern value="720" />
                         <Size value="350" />
                         <Offset x="0" y="0" z="400" h="0" p="0" r="0" />
                         <VrmlToPf value="FALSE"/>
                     </Marker>
+					<Marker name="TimestepMarker" >
+                        <Pattern value="5" />
+                        <Size value="350" />
+                        <Offset x="0" y="0" z="400" h="0" p="0" r="0" />
+                        <VrmlToPf value="FALSE"/>
+                    </Marker>
 
-                </ARToolKit>
+                </MarkerTracking>
+            <Plugin>
+                <ARTrace value="off" />
+				<ARToolKit value="off" >
+                    <Capture value="ON" />
+                    <Stereo value="OFF" />
+                    <TrackViewpoint value="OFF" />
+                    <TrackObjects value="ON" />
+				</ARToolKit>
 
                 <ARInteractors value="ON" menu="ON"/>
                 <ALVAR value="OFF">
@@ -300,22 +333,26 @@
                     <VideoDevice value="0" width="1920" height="1080" />
                     <!--VideoDevice value="2" width="1280" height="1024" /-->
                     <!--VideoDevice value="2" width="1200" height="1024" /-->
-                    <!--CameraCalibrationFile value="/data/ARToolKit/ptgrey.xml" /-->
+                    <!--CameraCalibrationFile value="/data/MarkerTracking/ptgrey.xml" /-->
                     
                     <!--VideoDevice value="1" width="640" height="480" /-->
-                    <CameraCalibrationFile value="/data/ARToolKit/4KCalib.xml" />
+                    <CameraCalibrationFile value="/data/MarkerTracking/4KCalib.xml" />
                 </ALVAR>
+				<Variant>
+				 <Marker name="0" markerName="22" variants="v1" />
+				 <Marker name="2" markerName="44" variants="v2" />
+				</Variant>
 				<ARUCO value="ON">
                     <Capture value="on" />
 					<DictionaryID value="7" />
 					<markerBorderBits value="1" />
 					<minSideLengthCanonicalImg value="20" />
 					
-                    <VideoDevice value="1" width="1920" height="1080" />
-                    <CameraCalibrationFile value="/data/ARToolKit/default.yaml" />
+                    <VideoDevice value="0" width="1920" height="1080" />
+                    <CameraCalibrationFile value="/data/MarkerTracking/default.yaml" />
                     <!--
                     <VideoDevice value="0" width="640" height="480" />
-                    <CameraCalibrationFile value="/data/ARToolKit/defaultCalib.xml" />
+                    <CameraCalibrationFile value="/data/MarkerTracking/defaultCalib.xml" />
                     -->
                 </ARUCO>
 

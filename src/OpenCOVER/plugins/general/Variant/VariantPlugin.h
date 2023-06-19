@@ -48,6 +48,8 @@
 #include <qdom.h>
 #include <QDir>
 #include "coVRBoxOfInterest.h"
+#include <config/CoviseConfig.h>
+#include <cover/MarkerTracking.h>
 
 using namespace covise;
 using namespace opencover;
@@ -55,6 +57,18 @@ using namespace opencover;
 
 //------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------
+
+class VariantMarker
+{
+public:
+    VariantMarker(std::string entryName);
+    ~VariantMarker();
+    std::set<MarkerTrackingMarker *> markerSet;
+    std::string markerName;
+    std::string variants;
+    std::set<std::string> variantSet;
+    float scale = -1.0;
+};
 
 class VariantPlugin : public coVRPlugin, public ui::Owner, /*public coMenuListener,*/ public coTUIListener, public coSelectionListener
 {
@@ -65,7 +79,6 @@ public:
     VariantPlugin();
     ~VariantPlugin() override;
 
-    // this will be called in PreFrame
     void preFrame() override;
     //this will be called by changing the selected object
     virtual bool selectionChanged() override;
@@ -139,6 +152,9 @@ private:
     std::map<std::string, coTUIToggleButton *> tui_header_trans;
 
     std::list<Variant *> varlist;
+    std::list<VariantMarker> variantMarkers;
+    const VariantMarker *activatedMarker = nullptr;
+
     std::map<osg::Node *, Variant *> varmap;
 
     osg::BoundingBox box;

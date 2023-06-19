@@ -19,38 +19,10 @@ INCLUDE_DIRECTORIES(
   ${OPENSCENEGRAPH_INCLUDE_DIRS}
 )
 
-FIND_PACKAGE(CURL QUIET)
-IF(CURL_FOUND)
-  ADD_DEFINITIONS(-DHAVE_LIBCURL)
-  IF(WIN32)
-    ADD_DEFINITIONS(-DCURL_STATICLIB)
-  ENDIF(WIN32)
-  SET(EXTRA_INCS ${EXTRA_INCS} ${CURL_INCLUDE_DIR})
-  SET(EXTRA_LIBS ${EXTRA_LIBS} ${CURL_LIBRARIES})
-ENDIF()
-
 SET(COVER_HEADERS
   # tui file browser headers
   #coVRDePee.h
   #coVRDePeePass.h
-  ARToolKit.h
-  Deletable.h
-  EventReceiver.h
-  InitGLOperation.h
-  MSEventHandler.h
-  MatrixSerializer.h
-  OpenCOVER.h
-  PluginMenu.h
-  QuitDialog.h
-  RenderObject.h
-  VRAvatar.h
-  VRRegisterSceneGraph.h
-  VRSceneGraph.h
-  VRViewer.h
-  VRVruiButtons.h
-  VRVruiRenderInterface.h
-  VRWindow.h
-  VruiPartnerMenuItem.h
   coActionUserData.h
   coBillboard.h
   coClusterStat.h
@@ -64,27 +36,28 @@ SET(COVER_HEADERS
   coMeasurement.h
   coOnscreenDebug.h
   coShutDownHandler.h
+  coTabletCovConfig.h
+  coTranslator.h
   coTUIFileBrowser/AGData.h
   coTUIFileBrowser/IData.h
   coTUIFileBrowser/IRemoteData.h
   coTUIFileBrowser/LocalData.h
   coTUIFileBrowser/VRBData.h
-  coTranslator.h
   coVRAnimationManager.h
+  coVrbMenu.h
   coVRCollaboration.h
   coVRCommunication.h
   coVRConfig.h
   coVRDynLib.h
   coVRFileManager.h
-  SidecarConfigBridge.h
-  coVRIOBase.h
-  coVRIOReader.h
   coVRIntersectionInteractor.h
   coVRIntersectionInteractorManager.h
+  coVRIOBase.h
+  coVRIOReader.h
   coVRLabel.h
   coVRLighting.h
-  coVRMSController.h
   coVRMessageSender.h
+  coVRMSController.h
   coVRNavigationManager.h
   coVRPartner.h
   coVRPlugin.h
@@ -99,29 +72,29 @@ SET(COVER_HEADERS
   coVRStatsDisplay.h
   coVRTouchTable.h
   coVRTui.h
-  coVrbMenu.h
+  Deletable.h
+  EventReceiver.h
+  InitGLOperation.h
+  MarkerTracking.h
+  MatrixSerializer.h
+  MSEventHandler.h
+  OpenCOVER.h
+  PluginMenu.h
+  QuitDialog.h
+  RenderObject.h
+  SidecarConfigBridge.h
   tridelity.h
+  VRAvatar.h
+  VRRegisterSceneGraph.h
+  VRSceneGraph.h
+  VruiPartnerMenuItem.h
+  VRViewer.h
+  VRVruiButtons.h
+  VRVruiRenderInterface.h
+  VRWindow.h
 )
 
 SET(COVER_SOURCES
-  ARToolKit.cpp
-  Deletable.cpp
-  EventReceiver.cpp
-  InitGLOperation.cpp
-  MSEventHandler.cpp
-  MatrixSerializer.cpp
-  OpenCOVER.cpp
-  PluginMenu.cpp
-  QuitDialog.cpp
-  RenderObject.cpp
-  VRAvatar.cpp
-  VRRegisterSceneGraph.cpp
-  VRSceneGraph.cpp
-  VRViewer.cpp
-  VRVruiButtons.cpp
-  VRVruiRenderInterface.cpp
-  VRWindow.cpp
-  VruiPartnerMenuItem.cpp
   coActionUserData.cpp
   coBillboard.cpp
   coClusterStat.cpp
@@ -135,29 +108,30 @@ SET(COVER_SOURCES
   coMeasurement.cpp
   coOnscreenDebug.cpp
   coShutDownHandler.cpp
+  coTabletCovConfig.cpp
+  coTabletUI.cpp
+  coTranslator.cpp
   coTUIFileBrowser/AGData.cpp
   coTUIFileBrowser/IData.cpp
   coTUIFileBrowser/LocalData.cpp
   coTUIFileBrowser/VRBData.cpp
   coTUIListener.cpp
   coTUISGBrowserTab.cpp
-  coTabletUI.cpp
-  coTranslator.cpp
   coVRAnimationManager.cpp
+  coVrbMenu.cpp
   coVRCollaboration.cpp
   coVRCommunication.cpp
   coVRConfig.cpp
   coVRDynLib.cpp
   coVRFileManager.cpp
-  SidecarConfigBridge.cpp
-  coVRIOBase.cpp
-  coVRIOReader.cpp
   coVRIntersectionInteractor.cpp
   coVRIntersectionInteractorManager.cpp
+  coVRIOBase.cpp
+  coVRIOReader.cpp
   coVRLabel.cpp
   coVRLighting.cpp
-  coVRMSController.cpp
   coVRMessageSender.cpp
+  coVRMSController.cpp
   coVRNavigationManager.cpp
   coVRPartner.cpp
   coVRPlugin.cpp
@@ -172,59 +146,79 @@ SET(COVER_SOURCES
   coVRStatsDisplay.cpp
   coVRTouchTable.cpp
   coVRTui.cpp
-  coVrbMenu.cpp
+  Deletable.cpp
+  EventReceiver.cpp
+  InitGLOperation.cpp
+  MarkerTracking.cpp
+  MatrixSerializer.cpp
+  MSEventHandler.cpp
+  OpenCOVER.cpp
+  PluginMenu.cpp
+  QuitDialog.cpp
+  RenderObject.cpp
+  SidecarConfigBridge.cpp
   tridelity.cpp
+  VRAvatar.cpp
+  VRRegisterSceneGraph.cpp
+  VRSceneGraph.cpp
+  VruiPartnerMenuItem.cpp
+  VRViewer.cpp
+  VRVruiButtons.cpp
+  VRVruiRenderInterface.cpp
+  VRWindow.cpp
   #coVRDePee.cpp
   #coVRDePeePass.cpp
 )
 
 SET(UI_HEADERS
-    ui/Export.h
     ui/Action.h
     ui/Button.h
+    ui/ButtonGroup.h
     ui/CollaborativePartner.h
     ui/Container.h
+    ui/CovconfigLink.h
+    ui/EditField.h
     ui/Element.h
+    ui/Export.h
+    ui/FileBrowser.h
     ui/Group.h
     ui/Label.h
     ui/Manager.h
     ui/Menu.h
     ui/Owner.h
-    ui/ButtonGroup.h
     ui/SelectionList.h
     ui/ShortcutListener.h
     ui/Slider.h
-    ui/TextField.h
-    ui/EditField.h
-    ui/FileBrowser.h
     ui/SpecialElement.h
+    ui/TabletView.h
+    ui/TextField.h
     ui/View.h
     ui/VruiView.h
-    ui/TabletView.h
 )
 
 SET(UI_SOURCES
     ui/Action.cpp
     ui/Button.cpp
+    ui/ButtonGroup.cpp
     ui/CollaborativePartner.cpp
     ui/Container.cpp
+    ui/CovconfigLink.cpp
+    ui/EditField.cpp
     ui/Element.cpp
+    ui/FileBrowser.cpp
     ui/Group.cpp
     ui/Label.cpp
     ui/Manager.cpp
     ui/Menu.cpp
     ui/Owner.cpp
-    ui/ButtonGroup.cpp
     ui/SelectionList.cpp
     ui/ShortcutListener.cpp
     ui/Slider.cpp
-    ui/TextField.cpp
-    ui/EditField.cpp
-    ui/FileBrowser.cpp
     ui/SpecialElement.cpp
+    ui/TabletView.cpp
+    ui/TextField.cpp
     ui/View.cpp
     ui/VruiView.cpp
-    ui/TabletView.cpp
 )
 
 SET(DEVICE_SOURCES
@@ -292,6 +286,11 @@ if(APPLE)
    add_covise_compile_flags(${COVERKERNEL_TARGET} "-Wno-deprecated")
    add_covise_compile_flags(${COVERKERNEL_TARGET} "-Wno-error=null-dereference")
 endif()
+
+IF(CURL_FOUND)
+  SET(EXTRA_INCS ${EXTRA_INCS} ${CURL_INCLUDE_DIR})
+  SET(EXTRA_LIBS ${EXTRA_LIBS} ${CURL_LIBRARIES})
+ENDIF()
 
 IF(BASEARCHSUFFIX STREQUAL "angus" OR
    BASEARCHSUFFIX STREQUAL "vista")

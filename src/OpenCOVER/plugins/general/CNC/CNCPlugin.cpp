@@ -521,7 +521,8 @@ CNCPlugin *CNCPlugin::instance()
 }
 
 CNCPlugin::CNCPlugin()
-: ui::Owner("CNCPlugin", cover->ui)
+: coVRPlugin(COVER_PLUGIN_NAME)
+, ui::Owner("CNCPlugin", cover->ui)
 , PathTab(new ui::Menu("CNC", this))
 , record(new ui::Button(PathTab, "Record"))
 , playPause(new ui::Button(PathTab, "Play"))
@@ -881,7 +882,7 @@ void CNCPlugin::arcFeed(double x, double y, double z, double centerX, double cen
     pathCenterY.push_back(centerY * scaleFactor);
     pathFeedRate.push_back(feedRate * scaleFactor);
     pathLineStrip.push_back(2);
-    //rotation gives the direction and the amount of 360° circles (offset by 1)
+    //rotation gives the direction and the amount of 360ï¿½ circles (offset by 1)
     if (rotation < 0)
         pathG.push_back(2); //clockwise
     else if (rotation > 0)
@@ -1651,7 +1652,8 @@ void CNCPlugin::setWpResolution()
 */
 void CNCPlugin::setWpMaterial()
 {
-    wpStateSet = new osg::StateSet();
+    //wpStateSet = new osg::StateSet();
+    wpStateSet = new osg::StateSet;
     wpMaterial = new osg::Material;
  //   wpLineWidth = new osg::LineWidth(2.0);
     wpMaterial.get()->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE);
@@ -1660,10 +1662,11 @@ void CNCPlugin::setWpMaterial()
     wpMaterial.get()->setSpecular(osg::Material::FRONT_AND_BACK, Vec4(0.5f, 0.5f, 0.5f, 1.0));
     wpMaterial.get()->setEmission(osg::Material::FRONT_AND_BACK, Vec4(0.0f, 0.0f, 0.0f, 1.0));
     wpMaterial.get()->setShininess(osg::Material::FRONT_AND_BACK, 8.0f);
+    
 
     wpStateSet->setMode(GL_LIGHTING, osg::StateAttribute::ON);
     wpStateSet->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
-    wpStateSet->setMode(GL_BLEND, osg::StateAttribute::ON);
+    wpStateSet->setMode(GL_BLEND, osg::StateAttribute::OFF);
     wpStateSet->setMode(osg::StateAttribute::PROGRAM, osg::StateAttribute::OFF);
     wpStateSet->setMode(osg::StateAttribute::VERTEXPROGRAM, osg::StateAttribute::OFF);
     wpStateSet->setMode(osg::StateAttribute::FRAGMENTPROGRAM, osg::StateAttribute::OFF);
@@ -1817,15 +1820,15 @@ void CNCPlugin::wpMillCutVec(int t)
     {
         int primPos = tree->getPrimitivePos();
 
-        piece->at(primPos)[2] = pathZ[t];  // unpräzise bezüglich Höhe Z. tatsächliche Fräserhöhe an Stelle piece-at(i) eventuell abweichend!
+        piece->at(primPos)[2] = pathZ[t];  // unpraezise bezueglich Hoehe Z. tatsaechliche Fraeserhoehe an Stelle piece-at(i) eventuell abweichend!
         piece->at(primPos + 1)[2] = pathZ[t];
         piece->at(primPos + 2)[2] = pathZ[t];
         piece->at(primPos + 3)[2] = pathZ[t];
-        pieceX->at(primPos)[2] = pathZ[t];  // unpräzise bezüglich Höhe Z. tatsächliche Fräserhöhe an Stelle piece-at(i) eventuell abweichend!
+        pieceX->at(primPos)[2] = pathZ[t];  // unprÃ¤zise bezÃ¼glich HÃ¶he Z. tatsÃ¤chliche FrÃ¤serhÃ¶he an Stelle piece-at(i) eventuell abweichend!
         pieceX->at(primPos + 1)[2] = pathZ[t];
         pieceX->at(primPos + 2)[2] = pathZ[t];
         pieceX->at(primPos + 3)[2] = pathZ[t];
-        pieceY->at(primPos)[2] = pathZ[t];  // unpräzise bezüglich Höhe Z. tatsächliche Fräserhöhe an Stelle piece-at(i) eventuell abweichend!
+        pieceY->at(primPos)[2] = pathZ[t];  // unprÃ¤zise bezÃ¼glich HÃ¶he Z. tatsÃ¤chliche FrÃ¤serhÃ¶he an Stelle piece-at(i) eventuell abweichend!
         pieceY->at(primPos + 1)[2] = pathZ[t];
         pieceY->at(primPos + 2)[2] = pathZ[t];
         pieceY->at(primPos + 3)[2] = pathZ[t];

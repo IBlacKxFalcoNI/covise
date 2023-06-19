@@ -46,7 +46,7 @@
 #include "coVRPluginSupport.h"
 #include "coVRConfig.h"
 #include "coCullVisitor.h"
-#include "ARToolKit.h"
+#include "MarkerTracking.h"
 #include "InitGLOperation.h"
 #include "input/input.h"
 #include "tridelity.h"
@@ -299,7 +299,7 @@ bool VRViewer::update()
     }
     if (arTracking)
     {
-        if (vpMarker->isVisible())
+        if (vpMarker && vpMarker->isVisible())
         {
             //osg::Matrix vm = vpMarker->getCameraTrans();
             //osg::Vec3 vp;
@@ -393,10 +393,10 @@ VRViewer::VRViewer()
 
     separation = stereoOn ? Input::instance()->eyeDistance() : 0.;
     arTracking = false;
-    if (coCoviseConfig::isOn("COVER.Plugin.ARToolKit.TrackViewpoint", false))
+    if (coCoviseConfig::isOn("COVER.MarkerTracking.TrackViewpoint", false))
     {
         arTracking = true;
-        vpMarker = new ARToolKitMarker("ViewpointMarker");
+        vpMarker = MarkerTracking::instance()->getMarker("ViewpointMarker");
     }
     overwritePAndV = false;
 
@@ -1376,6 +1376,10 @@ VRViewer::createChannels(int i)
     }
     if (!coVRConfig::instance()->glVersion.empty())
         ds->setGLContextVersion(coVRConfig::instance()->glVersion);
+    if (!coVRConfig::instance()->glProfileMask.empty())
+        ds->setGLContextProfileMask(std::stoi(coVRConfig::instance()->glProfileMask));
+    if (!coVRConfig::instance()->glContextFlags.empty())
+        ds->setGLContextFlags(std::stoi(coVRConfig::instance()->glContextFlags));
 
     // set up the use of stereo by default.
     ds->setStereo(conf.channels[i].stereo);

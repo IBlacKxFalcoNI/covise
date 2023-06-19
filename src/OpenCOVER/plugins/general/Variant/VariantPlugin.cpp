@@ -37,18 +37,41 @@
 #include <numeric>
 #include "VrmlNodeVariant.h"
 #include <vrml97/vrml/VrmlNamespace.h>
+#include <util/string_util.h>
 
 using namespace covise;
 using namespace opencover;
 
 VariantPlugin *VariantPlugin::plugin = NULL;
 
+VariantMarker::VariantMarker(std::string EntryName)
+{
+    float scale = coCoviseConfig::getFloat("scale", EntryName, -1.0);
+
+    std::string markerNames = coCoviseConfig::getEntry("markerNames", EntryName);
+    auto markerVec = split(markerNames, ';', true);
+    for (const auto &m: markerVec)
+    {
+        markerSet.insert(MarkerTracking::instance()->getMarker(m));
+    }
+
+    std::string variants = coCoviseConfig::getEntry("variants", EntryName);
+    auto varVec = split(variants, ';', true);
+    for (const auto &v: varVec)
+    {
+        variantSet.insert(v);
+    }
+}
+
+VariantMarker::~VariantMarker() = default;
+
 //------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------
 
 VariantPlugin::VariantPlugin()
-: ui::Owner("VariantPlugin", cover->ui)
+: coVRPlugin(COVER_PLUGIN_NAME)
+, ui::Owner("VariantPlugin", cover->ui)
 {
     assert(plugin == NULL);
     plugin = this;
@@ -57,6 +80,15 @@ VariantPlugin::VariantPlugin()
     _interactionA = new vrui::coTrackerButtonInteraction(vrui::coInteraction::ButtonA, "MoveMode", vrui::coInteraction::Medium);
     tmpVec.set(1, 1, 1);
     boi = NULL;
+
+
+    coCoviseConfig::ScopeEntries variantEntries = coCoviseConfig::getScopeEntries("COVER.Plugin.Variant.Marker");
+    for (const auto& varMarkerName : variantEntries)
+    {
+        std::string EntryName = std::string("COVER.Plugin.Variant.Marker.") + varMarkerName.first;
+        variantMarkers.emplace_back(EntryName);
+    }
+
     
     VrmlNamespace::addBuiltIn(VrmlNodeVariant::defineType());
 }
@@ -210,6 +242,29 @@ VariantPlugin::~VariantPlugin()
 void
 VariantPlugin::preFrame()
 {
+    const VariantMarker *toActivate = nullptr;
+    for (const auto& variantMarker : variantMarkers)
+    {
+        for (const auto &m: variantMarker.markerSet)
+        {
+            if (m->isVisible())
+            {
+                if (!toActivate)
+                    toActivate = &variantMarker;
+                if (activatedMarker == &variantMarker)
+                    toActivate = nullptr;
+            }
+        }
+    }
+    if (toActivate)
+    {
+        std::cerr << "Variant: Activating new variants via Marker: " << toActivate->variants << std::endl;
+        setVariant(toActivate->variants);
+        if(toActivate->scale!=-1)
+            cover->setScale(toActivate->scale);
+        activatedMarker = toActivate;
+    }
+
     sensorList.update();
 
     static osg::Matrix invStartHand;

@@ -31,6 +31,7 @@
 #include <OpenConfig/file.h>
 
 #include <memory>
+#include <string>
 
 namespace grmsg
 {
@@ -59,10 +60,7 @@ class DataHandle;
 #define COVERPLUGIN(Plugin)                                         \
     extern "C" PLUGINEXPORT opencover::coVRPlugin *coVRPluginInit() \
     {                                                               \
-        opencover::coVRPlugin *p = new Plugin;                      \
-        if (p)                                                      \
-            p->setName(#Plugin);                                    \
-        return p;                                                   \
+        return new Plugin();                                        \
     }
 
 namespace opencover
@@ -79,6 +77,7 @@ class Url;
 //
 //! make sure to clean up properly in the plugin's dtor
 
+
 class COVEREXPORT coVRPlugin
 {
     friend class coVRPluginList;
@@ -92,10 +91,10 @@ public:
     };
 
     //! called early, if loaded from config, before COVER is fully initialized
-    coVRPlugin();
+    coVRPlugin(const std::string &name);
 
     //! called before plugin is unloaded
-    virtual ~coVRPlugin();
+    virtual ~coVRPlugin() = default;
 
     //! this function is called when COVER is up and running and the plugin is initialized
     virtual bool init()
@@ -121,8 +120,6 @@ public:
         return m_name.c_str();
     }
 
-    //! set the plugin's name
-    void setName(const char *sn);
 
     std::shared_ptr<config::File> config();
 
@@ -171,6 +168,11 @@ public:
     //! called when COVER adds a new COVISE object to the scenegraph or if other plugins insert a node into the scene graph
     virtual void addNode(osg::Node *, const RenderObject * = NULL)
     {
+    }
+
+    virtual void addNodeFromPlugin(osg::Node *node, const RenderObject *ro, coVRPlugin *addingPlugin)
+    {
+        return addNode(node, ro);
     }
 
     //! this function is called if a node in the scene graph is removed
@@ -420,10 +422,10 @@ protected:
 private:
     void requestTimestepWrapper(int t);
 
-    bool m_initDone;
-    std::string m_name;
-    CO_SHLIB_HANDLE handle;
-    int m_outstandingTimestep;
+    bool m_initDone = false;
+    const std::string m_name;
+    CO_SHLIB_HANDLE handle = nullptr;
+    int m_outstandingTimestep = -1;
     std::shared_ptr<config::File> m_configFile;
 };
 }

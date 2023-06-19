@@ -85,6 +85,8 @@ coVRPlugin *coVRPluginList::loadPlugin(const char *name, bool showErrors)
             showenv("VISTLE_DYLD_LIBRARY_PATH");
             showenv("DYLD_LIBRARY_PATH");
             showenv("DYLD_FRAMEWORK_PATH");
+            showenv("DYLD_FALLBACK_LIBRARY_PATH");
+            showenv("DYLD_FALLBACK_FRAMEWORK_PATH");
 #elif defined(__linux)
             showenv("LD_LIBRARY_PATH");
 #else
@@ -111,8 +113,6 @@ coVRPlugin *coVRPluginList::loadPlugin(const char *name, bool showErrors)
     }
 
     plugin->handle = handle;
-    plugin->setName(name);
-
     return plugin;
 }
 
@@ -392,8 +392,7 @@ void coVRPluginList::notify(int level, const char *text) const
 
 void coVRPluginList::addNode(osg::Node *node, const RenderObject *ro, coVRPlugin *addingPlugin) const
 {
-    DOALL(if (plugin != addingPlugin)
-              plugin->addNode(node, const_cast<RenderObject *>(ro)));
+    DOALL(if (plugin != addingPlugin) plugin->addNodeFromPlugin(node, const_cast<RenderObject *>(ro), addingPlugin));
 }
 
 void coVRPluginList::addObject(const RenderObject *container, osg::Group *parent,

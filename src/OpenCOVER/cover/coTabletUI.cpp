@@ -32,8 +32,10 @@
 #include "coTUIFileBrowser/AGData.h"
 #endif
 
-#include <QTextStream>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
 #include <iostream>
 
 using namespace covise;
@@ -791,6 +793,9 @@ void coTUIFileBrowserButton::setCurDir(const char *dir)
     if ((sdir.compare("") || sdir.compare(".")) && (this->mLocation == this->mLocalIP))
     {
         sdir = this->mLocalData->resolveToAbsolute(std::string(dir));
+        QFileInfo fi(sdir.c_str());
+        if(fi.isFile())
+            sdir = fi.absoluteDir().absolutePath().toStdString();
 #ifdef FILEBROWSER_DEBUG
         std::cerr << "Adjusted current directory!" << std::endl;
 #endif
@@ -1457,8 +1462,8 @@ void coTUITab::resend(bool create)
     tb << ID;
     tb << m_allowRelayout;
 
-    tui()->send(tb);
     coTUIElement::resend(create);
+    tui()->send(tb);
 }
 
 void coTUITab::parseMessage(TokenBuffer &tb)
@@ -2433,11 +2438,12 @@ coTUIMessageBox::~coTUIMessageBox()
 //----------------------------------------------------------
 //----------------------------------------------------------
 
-coTUIEditField::coTUIEditField(const std::string &n, int pID)
+coTUIEditField::coTUIEditField(const std::string &n, int pID, const std::string &def)
     : coTUIElement(n, pID, TABLET_EDIT_FIELD)
 {
     this->text = name;
     immediate = false;
+    setText(def);
 }
 
 coTUIEditField::coTUIEditField(coTabletUI *tui, const std::string &n, int pID)
@@ -2506,11 +2512,12 @@ void coTUIEditField::resend(bool create)
 //----------------------------------------------------------
 //##########################################################
 
-coTUIEditTextField::coTUIEditTextField(const std::string &n, int pID)
+coTUIEditTextField::coTUIEditTextField(const std::string &n, int pID, const std::string &def)
     : coTUIElement(n, pID, TABLET_TEXT_EDIT_FIELD)
 {
     text = name;
     immediate = false;
+    setText(def);
 }
 
 coTUIEditTextField::coTUIEditTextField(coTabletUI *tui, const std::string &n, int pID)
@@ -2575,6 +2582,7 @@ coTUIEditIntField::coTUIEditIntField(const std::string &n, int pID, int def)
     value = def;
     immediate = 0;
     setVal(value);
+    setLabel("");
 }
 
 coTUIEditIntField::coTUIEditIntField(coTabletUI *tui, const std::string &n, int pID, int def)
@@ -2583,6 +2591,7 @@ coTUIEditIntField::coTUIEditIntField(coTabletUI *tui, const std::string &n, int 
     value = def;
     immediate = 0;
     setVal(value);
+    setLabel("");
 }
 
 coTUIEditIntField::coTUIEditIntField(QObject *parent, const std::string &n, int pID, int def)
@@ -2591,6 +2600,7 @@ coTUIEditIntField::coTUIEditIntField(QObject *parent, const std::string &n, int 
     value = def;
     immediate = 0;
     setVal(value);
+    setLabel("");
 }
 
 coTUIEditIntField::~coTUIEditIntField()
@@ -2657,6 +2667,7 @@ coTUIEditFloatField::coTUIEditFloatField(const std::string &n, int pID, float de
     value = def;
     setVal(value);
     immediate = 0;
+    setLabel("");
 }
 
 coTUIEditFloatField::coTUIEditFloatField(coTabletUI *tui, const std::string &n, int pID, float def)
@@ -2665,6 +2676,7 @@ coTUIEditFloatField::coTUIEditFloatField(coTabletUI *tui, const std::string &n, 
     value = def;
     setVal(value);
     immediate = 0;
+    setLabel("");
 }
 
 coTUIEditFloatField::coTUIEditFloatField(QObject *parent, const std::string &n, int pID, float def)
@@ -2673,6 +2685,7 @@ coTUIEditFloatField::coTUIEditFloatField(QObject *parent, const std::string &n, 
     value = def;
     setVal(value);
     immediate = 0;
+    setLabel("");
 }
 
 coTUIEditFloatField::~coTUIEditFloatField()

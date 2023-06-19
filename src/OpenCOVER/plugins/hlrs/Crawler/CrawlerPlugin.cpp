@@ -56,6 +56,7 @@ CrawlerPlugin *CrawlerPlugin::plugin = NULL;
 //------------------------------------------------------------------------------------------------------------------------------
 
 CrawlerPlugin::CrawlerPlugin()
+: coVRPlugin(COVER_PLUGIN_NAME)
 {
     plugin = this;
 
@@ -156,7 +157,7 @@ void CrawlerPlugin::tabletEvent(coTUIElement *elem)
 
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-//-----WRL Importer für Elevation-Gird-----
+//-----WRL Importer fuer Elevation-Gird-----
 
 
 bool CrawlerPlugin::loadWRL(const char *path, PxU32 &xDimension, PxU32 &zDimension, PxU32 &xSpacing, PxU32 &zSpacing, PxReal &heightscale, std::vector<vector<PxReal>> &HeightMatrix)				
@@ -205,7 +206,7 @@ bool CrawlerPlugin::loadWRL(const char *path, PxU32 &xDimension, PxU32 &zDimensi
 }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-//OBJ-Importer für Kometenoberfläche von Chury
+//OBJ-Importer fuer Kometenoberflaeche von Chury
 
 
 
@@ -311,8 +312,8 @@ void CrawlerPlugin::initPhysics()
     //gScene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES,		1.0f);	//Enable visualization of actor's axis
 
     //-----Creating PhysX material (staticFriction, dynamicFriction, restitution)-----
-    gMaterial = gPhysics->createMaterial(0.45f, 0.2f, 0.1f);		//restitution = 0 (vollkommen plastischer Stoß)		
-    //restitution = 1 (vollkommen elastischer Stoß)
+    gMaterial = gPhysics->createMaterial(0.45f, 0.2f, 0.1f);		//restitution = 0 (vollkommen plastischer Stoï¿½)		
+    //restitution = 1 (vollkommen elastischer Stoï¿½)
     //-----Create Cooking-----
     gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(MyTolerancesScale));
 
@@ -373,7 +374,7 @@ void CrawlerPlugin::initPhysics()
     gScene->addActor(*aHeightFieldActor);		//Add Heightfield to Scene
 
     /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-    // Erstellen des Triangle-meshes für Kometenoberfläche von Chury
+    // Erstellen des Triangle-meshes fuer Kometenoberflaeche von Chury
 
 
 

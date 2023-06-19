@@ -7,8 +7,8 @@
   <COVER>
    <NumScreens value="0" />
    <NumWindows value="0" />
-   <StartCommand value="sudo nvidia-smi -ac 4513,1657" />
-   <ExitCommand value="sudo nvidia-smi -rac" />
+   <StartCommand value="PATH=/usr/bin LD_LIBRARY_PATH= sudo nvidia-smi -ac 4513,1657" />
+   <ExitCommand value="PATH=/usr/bin LD_LIBRARY_PATH= sudo nvidia-smi -rac" />
   </COVER>
  </GLOBAL>
 
@@ -59,7 +59,7 @@
            </CaveHand>
 
            <CaveCamera device="DTrackCave" device1="DTrackCaveOutside" bodyIndex="2">
-              <Offset x="0" y="120" z="-200" />
+              <Offset x="0" y="120" z="-100" />
               <Orientation h="0" p="0" r="0" />
            </CaveCamera>
 
@@ -545,7 +545,7 @@
    <!--Model aircraft="lcaro" enginesDir="engine" systemsDir="aircraft/lcaro/Systems" resetFile="reset00.xml">
    </Model-->
    </JSBSim>
-        <ARToolKit value="Off">
+        <MarkerTracking value="Off">
 		   <Capture value="Off" />
 		   <Stereo value="OFF" />
 		   <AdjustCameraParameter value="ON" />
@@ -554,7 +554,7 @@
 		   <Threshold value="143" />
 		   <!-- SLK -->
 		   <Marker name="ObjectMarker" >
-			   <Pattern value="/mnt/raid/share/hpcbrait/AR/camera/4x4_56.patt" />
+			   <Pattern value="56" />
 			   <Size value="50" />
 			   <Offset x="0" y="0" h="0" z="38" p="0" r="-6" />
 			   <VrmlToPf value="TRUE" />
@@ -568,7 +568,7 @@
 			   <irmosReceiverPort value="31666" />
 			   <irmosReceiverServer value="192.108.38.44" />
 		   </RemoteAR>
-        </ARToolKit>	   
+        </MarkerTracking>	   
 	   
    <Bicycle>
    <LenkMaus value="/dev/input/mouse3"/>

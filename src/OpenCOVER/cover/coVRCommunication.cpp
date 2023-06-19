@@ -28,7 +28,7 @@
  ************************************************************************/
 
 
-#include "ARToolKit.h"
+#include "MarkerTracking.h"
 #include "OpenCOVER.h"
 #include "VRAvatar.h"
 #include "VRViewer.h"
@@ -122,6 +122,24 @@ coVRCommunication::coVRCommunication()
 	sharedStateManager.reset(new SharedStateManager(registry.get()));
 }
 
+coVRCommunication::~coVRCommunication()
+{
+    onConnectCallbacks.clear();
+    onDisconnectCallbacks.clear();
+    onSessionChangedCallbacks.clear();
+
+    waitMessagesCallback = nullptr;
+    handleMessageCallback = nullptr;
+
+    sharedStateManager.reset();
+    registry.reset();
+
+    assert(s_instance);
+    coVRPartnerList::instance()->removePartner(me()->ID());
+    delete remoteNavInteraction;
+    s_instance = NULL;
+}
+
 void coVRCommunication::init()
 {
 	m_vrbMenu.reset(new VrbMenu());
@@ -175,15 +193,6 @@ const coVRPartner *coVRCommunication::me() const{
     return coVRPartnerList::instance()->me();
 }
 
-
-
-coVRCommunication::~coVRCommunication()
-{
-    assert(s_instance);
-    coVRPartnerList::instance()->removePartner(me()->ID());
-    delete remoteNavInteraction;
-    s_instance = NULL;
-}
 
 void coVRCommunication::update(clientRegClass *theChangedClass)
 {
@@ -290,9 +299,9 @@ bool coVRCommunication::isMaster() // returns true, if we are master
 
 void coVRCommunication::processARVideoFrame(const char *key, const char *tmp)
 {
-    if (!(strcmp(key, "AR_VIDEO_FRAME")) && ARToolKit::instance()->remoteAR)
+    if (!(strcmp(key, "AR_VIDEO_FRAME")) && MarkerTracking::instance()->remoteAR)
     {
-        ARToolKit::instance()->remoteAR->receiveImage(tmp);
+        MarkerTracking::instance()->remoteAR->receiveImage(tmp);
     }
 }
 
@@ -366,7 +375,7 @@ void coVRCommunication::processVRBMessage(covise::TokenBuffer &tb)
     {
         const char * tmp;
         tb >> tmp;
-        ARToolKit::instance()->remoteAR->receiveImage(tmp);
+        MarkerTracking::instance()->remoteAR->receiveImage(tmp);
     }
         break;
     case vrb::SYNC_KEYBOARD:
@@ -889,5 +898,3 @@ void coVRCommunication::setFBData(IData *data)
         this->mfbData[locData->getId()] = locData;
     }
 }
-
-

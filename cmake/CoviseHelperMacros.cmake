@@ -441,11 +441,11 @@ MACRO(COVER_ADD_PLUGIN_TARGET targetname)
   INCLUDE_DIRECTORIES(
     "${COVISEDIR}/src/OpenCOVER"
   )
-IF(APPLE)
-  ADD_LIBRARY(${targetname} MODULE ${ARGN} ${SOURCES} ${HEADERS})
-ELSE(APPLE)
-  ADD_LIBRARY(${targetname} SHARED ${ARGN} ${SOURCES} ${HEADERS})
-ENDIF(APPLE)
+  IF(APPLE)
+    ADD_LIBRARY(${targetname} MODULE ${ARGN} ${SOURCES} ${HEADERS})
+  ELSE(APPLE)
+    ADD_LIBRARY(${targetname} SHARED ${ARGN} ${SOURCES} ${HEADERS})
+  ENDIF(APPLE)
   
   IF("${MAIN_FOLDER}" STREQUAL "")
       set_target_properties(${targetname} PROPERTIES FOLDER "Plugins/${PLUGIN_CATEGORY}")
@@ -455,7 +455,7 @@ ENDIF(APPLE)
   
   # SET_TARGET_PROPERTIES(${targetname} PROPERTIES PROJECT_LABEL "${targetname}")
   SET_TARGET_PROPERTIES(${targetname} PROPERTIES OUTPUT_NAME "${targetname}")
-
+  
   COVISE_ADJUST_OUTPUT_DIR(${targetname} "OpenCOVER/plugins")
   
   # set additional COVISE_COMPILE_FLAGS
@@ -464,23 +464,23 @@ ENDIF(APPLE)
   SET_TARGET_PROPERTIES(${targetname} PROPERTIES LINK_FLAGS "${COVISE_LINK_FLAGS}")
   # switch off "lib" prefix for MinGW
   IF(MINGW)
-    SET_TARGET_PROPERTIES(${targetname} PROPERTIES PREFIX "")
+  SET_TARGET_PROPERTIES(${targetname} PROPERTIES PREFIX "")
   ENDIF(MINGW)
-    
+  
   TARGET_LINK_LIBRARIES(${targetname} coOpenPluginUtil coOpenCOVER coOpenVRUI coOSGVRUI
-     ${COVISE_VRBCLIENT_LIBRARY} ${COVISE_CONFIG_LIBRARY} ${COVISE_UTIL_LIBRARY}
-     ${OPENSCENEGRAPH_LIBRARIES}) # ${CMAKE_THREAD_LIBS_INIT})
+  ${COVISE_VRBCLIENT_LIBRARY} ${COVISE_CONFIG_LIBRARY} ${COVISE_UTIL_LIBRARY}
+  ${OPENSCENEGRAPH_LIBRARIES}) # ${CMAKE_THREAD_LIBS_INIT})
   
   IF(APPLE)
-    ADD_COVISE_LINK_FLAGS(${targetname} "-undefined error")
-    ADD_COVISE_LINK_FLAGS(${targetname} "-flat_namespace")
+  ADD_COVISE_LINK_FLAGS(${targetname} "-undefined error")
+  ADD_COVISE_LINK_FLAGS(${targetname} "-flat_namespace")
   ELSEIF (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    ADD_COVISE_LINK_FLAGS(${targetname} "-Wl,--no-undefined")
+  ADD_COVISE_LINK_FLAGS(${targetname} "-Wl,--no-undefined")
   ENDIF(APPLE)
   
   UNSET(SOURCES)
   UNSET(HEADERS)
-
+  target_compile_definitions(${targetname} PRIVATE COVER_PLUGIN_NAME="${targetname}")
   qt_use_modules(${targetname} Core)
 ENDMACRO(COVER_ADD_PLUGIN_TARGET)
 
@@ -930,7 +930,7 @@ MACRO(COVISE_FIND_PACKAGE package)
    endif()
    if (pack STREQUAL "PROJ4")
        set(pack "PROJ")
-       if (APPLE)
+       if (APPLE AND NOT BASEARCHSUFFIX STREQUAL "spack")
            set(CMAKE_PREFIX_PATH /usr/local/opt/proj@7 ${CMAKE_PREFIX_PATH})
            if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
                set(CMAKE_PREFIX_PATH /opt/homebrew/opt/proj@7 ${CMAKE_PREFIX_PATH})
@@ -939,10 +939,19 @@ MACRO(COVISE_FIND_PACKAGE package)
    endif()
    if (pack MATCHES "^Qt5")
        set(pack "Qt5")
-       if (APPLE)
-           set(CMAKE_PREFIX_PATH /usr/local/opt/qt5 ${CMAKE_PREFIX_PATH})
+       if (APPLE AND NOT BASEARCHSUFFIX STREQUAL "spack")
+           set(CMAKE_PREFIX_PATH /usr/local/opt/qt@5 ${CMAKE_PREFIX_PATH})
            if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
-               set(CMAKE_PREFIX_PATH /opt/homebrew/opt/qt5 ${CMAKE_PREFIX_PATH})
+               set(CMAKE_PREFIX_PATH /opt/homebrew/opt/qt@5 ${CMAKE_PREFIX_PATH})
+           endif()
+       endif()
+   endif()
+   if (pack MATCHES "^Qt6")
+       set(pack "Qt6")
+       if (APPLE AND NOT BASEARCHSUFFIX STREQUAL "spack")
+           set(CMAKE_PREFIX_PATH /usr/local/opt/qt@6 ${CMAKE_PREFIX_PATH})
+           if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
+               set(CMAKE_PREFIX_PATH /opt/homebrew/opt/qt@6 ${CMAKE_PREFIX_PATH})
            endif()
        endif()
    endif()

@@ -43,10 +43,11 @@ using namespace std;
 using vrui::vruiButtons;
 
 CovisePlugin::CovisePlugin()
-: ui::Owner("CovisePlugin", cover->ui)
+: coVRPlugin(COVER_PLUGIN_NAME)
+, ui::Owner("CovisePlugin", cover->ui)
 {
-    setName("COVISE");
     std::cerr << "Starting COVISE connection..." << std::endl;
+    new ObjectManager(this);
     new VRCoviseConnection();
     CoviseRender::set_custom_callback([this](const covise::Message &msg)
                                       { handleVrbMessage(msg); });
